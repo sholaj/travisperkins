@@ -19,6 +19,7 @@ HOWTO
 2. cd travisperkins
 3. vagrant status
 4. vagrant up travisperkins
+5. vagrant provision travisperkins
 
 TODO
 
