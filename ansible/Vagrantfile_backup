@@ -1,0 +1,81 @@
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "ubuntu/trusty64"
+
+  # The url from where the 'config.vm.box' box will be fetched if it
+  # doesn't already exist on the user's system.
+  config.vm.box_url = "https://vagrantcloud.com/ubuntu/boxes/trusty64/versions/14.04/providers/virtualbox.box"
+
+  # Configure SSH keys
+  id_rsa_ssh_key_pub = File.read(File.expand_path('~') + '/.ssh/id_rsa.pub');
+  config.vm.provision :shell, :inline => "echo 'Copying local id_rsa SSH Key to VM auth_keys for auth purposes (login into VM included)...' && echo '#{id_rsa_ssh_key_pub }' >> /home/vagrant/.ssh/authorized_keys && chmod 600 /home/vagrant/.ssh/authorized_keys"
+
+
+  # Setting hostname
+  config.vm.hostname = "ansible"
+
+  config.vm.network "forwarded_port", guest: 80, host: 8080
+
+  config.vm.provision :ansible do |ansible|
+    ansible.playbook = "playbook.yml"
+  end
+  config.vm.define "web" do |web|
+    web.vm.box = "precise64"
+    web.vm.hostname = 'web'
+    web.vm.box_url = "https://vagrantcloud.com/ubuntu/boxes/trusty64/versions/14.04/providers/virtualbox.box"
+
+    web.vm.network :private_network, ip: "192.168.56.101"
+    web.vm.network :forwarded_port, guest: 22, host: 10122, id: "ssh"
+    web.vm.network :forwarded_port, guest: 80, host: 8080, id: "web"
+    
+
+    web.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 1024]
+      v.customize ["modifyvm", :id, "--name", "web"]
+      config.vm.provision :ansible do |ansible|
+      ansible.playbook = "playbook.yml"
+      end
+    end
+  end
+
+  config.vm.define "app1" do |app|
+    app.vm.box = "precise64"
+    app.vm.hostname = 'app1'
+    app.vm.box_url = "https://vagrantcloud.com/ubuntu/boxes/trusty64/versions/14.04/providers/virtualbox.box"
+
+    app.vm.network :private_network, ip: "192.168.56.102"
+    app.vm.network :forwarded_port, guest: 22, host: 10222, id: "ssh"
+    app.vm.network :forwarded_port, guest: 80, host: 8484, id: "goapp"
+
+    app.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 1024]
+      v.customize ["modifyvm", :id, "--name", "app1"]
+      config.vm.provision :ansible do |ansible|
+      ansible.playbook = "playbook.yml"
+      end
+    end
+  end
+
+  config.vm.define "app2" do |app|
+    app.vm.box = "precise64"
+    app.vm.hostname = 'app2'
+    app.vm.box_url = "https://vagrantcloud.com/ubuntu/boxes/trusty64/versions/14.04/providers/virtualbox.box"
+
+    app.vm.network :private_network, ip: "192.168.56.103"
+    app.vm.network :forwarded_port, guest: 22, host: 10222, id: "ssh"
+    app.vm.network :forwarded_port, guest: 80, host: 8484, id: "goapp"
+
+    app.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 1024]
+      v.customize ["modifyvm", :id, "--name", "app2"]
+      config.vm.provision :ansible do |ansible|
+      ansible.playbook = "playbook.yml"
+      end
+    end
+  end
+
+end

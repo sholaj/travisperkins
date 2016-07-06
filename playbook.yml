@@ -1,0 +1,40 @@
+---
+#Common 
+- hosts: all
+  become: yes
+  become_user: root
+
+
+  pre_tasks:
+    - name: update apt cache
+      apt: update_cache=yes cache_valid_time=3600
+    - name: upgrade package
+      apt: upgrade=yes
+
+
+      
+  roles:
+   - firewall 
+  
+
+  post_tasks:
+  - name:  restart server
+    shell: sleep 3 && shutdown -r now "Ansible reboot"
+    async: 1
+    poll: 0
+    become: yes
+    become_user: root
+    ignore_errors: true
+
+  - name: waiting for server to come back after reboot
+    become: false
+    local_action: wait_for host={{ ansible_ssh_host }} 
+                        state=started 
+                        port=22 
+                        delay=30 
+                        timeout=300 
+                        connect_timeout=15
+
+  - name: uptime display
+    shell: uptime
+ 

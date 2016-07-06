@@ -1,0 +1,10 @@
+---
+- name: install ufw 
+  apt: name=ufw state=present
+
+- name: Allow SSH in UFW
+  ufw: rule=allow port=22 proto=tcp
+
+- name: Set firewall default policy
+  ufw: state=enabled policy=reject
+  become_user: root

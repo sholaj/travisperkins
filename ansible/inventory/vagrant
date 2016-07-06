@@ -1,0 +1,8 @@
+[app]
+app1 ansible_ssh_host=10.0.15.21  ansible_ssh_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/app1/virtualbox/private_key
+app2 ansible_ssh_host=10.0.15.22  ansible_ssh_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/app2/virtualbox/private_key
+[loadbalancer]
+lb ansible_ssh_host=10.0.15.11  ansible_ssh_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/lb/virtualbox/private_key
+[management]
+travisperkins ansible_ssh_host=10.0.15.100  ansible_ssh_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/travisperkins/virtualbox/private_key
+

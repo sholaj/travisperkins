@@ -1,0 +1,13 @@
+--- #Terminate ec2 instances
+- name: Terminate instances
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Terminate instances that were previously launched
+      ec2:
+        state: 'absent'
+        instance_ids: i-0c00b42a56e10c7c6
+  
+
+
+    

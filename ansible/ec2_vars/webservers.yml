@@ -1,0 +1,13 @@
+ec2_keypair: "yubl-np-kp"
+ec2_security_group: ['sg-d8de12bf', 'sg-5d4db33a']
+ec2_instance_type: "t2.medium"
+ec2_image: "ami-d2aa22a1"
+ec2_subnet_ids: ['subnet-17eee44e']
+ec2_region: "eu-west-1"
+ec2_tag_Name: "Codedeploy"
+ec2_tag_Type: "Codedeploy"
+ec2_tag_Environment: "test"
+ec2_volume_size: 16
+
+
+

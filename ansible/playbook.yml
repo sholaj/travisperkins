@@ -1,0 +1,31 @@
+---
+#Common 
+- hosts: all
+  become: yes
+  become_user: root
+
+  vars:
+    document_root: /vagrant
+
+  pre_tasks:
+    - name: update apt cache
+      apt: update_cache=yes
+    - name: remove apache
+      apt: name=apache2 state=absent
+      
+  roles:
+    - webserver
+    - ansible-go
+    - git 
+    - nginx_webserver
+
+- hosts: app
+  
+  roles: 
+    - git
+    - ansible-go
+
+- hosts: lb
+  
+  roles:
+    - nginx_webserver
