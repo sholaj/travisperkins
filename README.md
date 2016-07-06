@@ -1,6 +1,7 @@
 # travisperkins
 
 Tasks 
+
 1. Automate the provision of ubuntu server
 2. Patch the server
 3. Install and enable UFW
